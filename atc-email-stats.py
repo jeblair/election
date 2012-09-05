@@ -20,6 +20,7 @@ accounts = {}
 class Account(object):
     def __init__(self, num):
         self.num = num
+        self.full_name = ''
         self.emails = []
         self.username = None
 
@@ -30,7 +31,7 @@ def get_account(num):
         accounts[num] = a
     return a
 
-for row in csv.reader(open('accounts.csv')):
+for row in csv.reader(open('emails.csv')):
     num, email, pw, external = row
     num = int(num)
     a = get_account(num)
@@ -47,6 +48,12 @@ for row in csv.reader(open('accounts.csv')):
             print a.username
             raise Exception("Already a username")
         a.username = m.group(1)
+
+for row in csv.reader(open('accounts.csv')):
+    num = int(row[-1])
+    name = row[1]
+    a = get_account(num)
+    a.full_name = name
 
 username_accounts = {}
 for a in accounts.values():
@@ -114,5 +121,5 @@ print 'examined %s changes' % count
 print 'earliest timestamp: %s' % earliest
 writer = csv.writer(open(options.output, 'w'))
 for a in atcs:
-    writer.writerow([a.username] + a.emails)
+    writer.writerow([a.username, a.full_name] + a.emails)
 print
